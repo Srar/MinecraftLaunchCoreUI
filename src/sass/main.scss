@@ -1,0 +1,27 @@
+@import 'windowControls';
+@import 'mainContainer';
+@import 'loadingIcon';
+@import 'loadingText';
+@import 'choseVersionsContainer';
+@import 'settingsContainer';
+
+//
+//* {
+//	outline: none;
+//	cursor: default;
+//	box-sizing: border-box;
+//	&[disabled]:hover {
+//		cursor: not-allowed;
+//	}
+//}
+
+body {
+	-webkit-user-select: none;
+
+	font: 13px 'Myriad Set Pro', 'Helvetica Neue', 'Microsoft Yahei', Helvetica, Arial, sans-serif;
+	margin: 0 0 0 0;
+
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+

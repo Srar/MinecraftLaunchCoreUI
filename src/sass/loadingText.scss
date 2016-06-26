@@ -1,0 +1,27 @@
+@font-face {
+	font-family: "voez";
+	src: url('./assets/fonts/HallFeticaVoez.ttf');
+}
+
+.loading-text {
+	font-family: "voez";
+
+	.drop {
+		position: relative;
+		top: -25px;
+		opacity: 0;
+
+		transition-property: all;
+		transition-duration: 0.40s;
+	}
+
+	.drop-clear {
+		transition-property: all;
+		transition-duration: 0s;
+	}
+
+	.droping {
+		opacity: 1;
+		top: 0px;
+	}
+}

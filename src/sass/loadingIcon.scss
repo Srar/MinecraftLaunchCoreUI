@@ -1,0 +1,98 @@
+@mixin loading-icon($ChildSize, $color){
+	$childSize: $ChildSize - 1;
+	$moveMax: $ChildSize;
+
+	position: relative;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	margin: auto;
+
+	width: ( $ChildSize * 3 ) + 1px;
+	height: ( $ChildSize * 3 ) + 1px;
+
+	transform:rotate(-45deg);
+	animation: main-block-rotate 2s ease-in-out infinite ;
+
+	$rotate: -45deg;
+
+	// myself
+	// animation: main-block-rotate 4s ease-in-out infinite ;
+	//@keyframes main-block-rotate {
+	//	0%  { transform: rotate($rotate)  }
+	//	25% { transform: rotate($rotate * 5) }
+	//	50% { transform: rotate($rotate * 7) }
+	//
+	//	75% { transform: rotate($rotate * 11) }
+	//	100%{ transform: rotate($rotate * 13) }
+	//}
+
+	// voez.rayark.net
+	@keyframes main-block-rotate {
+		0%  { transform: rotate(-45deg)  }
+		50% { transform: rotate(-225deg) }
+		100%{ transform: rotate(-405deg) }
+	}
+
+
+	.block {
+		position: absolute;
+		top: $moveMax;
+		left: $moveMax;
+
+		width: $childSize;
+		height: $childSize;
+
+		border-color: $color;
+		border-width: 1px;
+		border-style: solid;
+	}
+
+	.block-one {
+		left: $moveMax;
+		top: 0px;
+		animation: block-one-rotate 2s ease-in-out infinite ;
+	}
+	@keyframes block-one-rotate {
+		0%  { top: $moveMax; }
+		50% { top: 0px;  }
+		100%{ top: $moveMax; }
+	}
+
+	.block-two {
+		top: $moveMax;
+		animation: block-two-rotate 2s ease-in-out infinite ;
+	}
+	@keyframes block-two-rotate {
+		0%  { left: $moveMax; }
+		50% { left: $moveMax * 2;  }
+		100%{ left: $moveMax; }
+	}
+
+	.block-three {
+		left: $moveMax;
+		top: $moveMax * 2;
+		animation: block-three-rotate 2s ease-in-out infinite ;
+	}
+	@keyframes block-three-rotate {
+		0%  { top: $moveMax; }
+		50% { top: $moveMax * 2;  }
+		100%{ top: $moveMax; }
+	}
+
+	.block-four {
+		top: $moveMax;
+		animation: block-four-rotate 2s ease-in-out infinite ;
+	}
+	@keyframes block-four-rotate {
+		0%  { left: $moveMax; }
+		50% { left: 0px;  }
+		100%{ left: $moveMax; }
+	}
+}
+
+.loading-icon-main {
+	@include loading-icon(15px, #69c13a);
+}
+

@@ -1,0 +1,42 @@
+@mixin LaunchButton() {
+	position: relative;
+	border-radius: 50px;
+	top: 35px;
+	left: 0px;
+	right: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	background: linear-gradient(137deg, rgb(128, 206, 83), rgb(246, 223, 53));
+
+	button {
+		position: relative;
+		top: 2px;
+		left: 2px;
+		border: 0px solid transparent;
+		outline: 0px;
+		margin: auto;
+		border-radius: 50px;
+		-webkit-user-select: none;
+		background-color: rgb(255, 255, 255);
+
+		span {
+			font-size: 20px;
+			padding-left: 4px;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-image: linear-gradient(135deg, rgb(128, 206, 83), rgb(191, 215, 68));
+		}
+	}
+
+	transition: all 0.3s;
+
+	&:hover {
+		box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+		transform: scale(1.1);
+	}
+
+	&:active {
+		box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.5);
+		transform: scale(0.9);
+	}
+}

@@ -1,0 +1,71 @@
+@import "LaunchButton";
+
+$width: 310px;
+$height: 487px;
+
+.main-container {
+	position: relative;
+
+	width: $width;
+	height: $height;
+
+	.gradient {
+		height: 350px;
+		-webkit-app-region:drag;
+		background:-webkit-gradient(linear, 0 0, 0 100%, from(rgb(25, 172, 98)), to(rgb(128, 206, 83)));
+	}
+
+	.icon {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		margin-top: 60px;
+		width: 120px;
+		height: 120px;
+	}
+
+	.news {
+		position: absolute;
+		top: 230px;
+		color: #ffffff;
+		width:100%;
+		text-align: center;
+
+		cursor: default;
+
+		transition-property: all;
+		transition-duration: 0.15s;
+	}
+
+	.news-hand {
+		cursor: pointer;
+	}
+
+	.news-change {
+		padding-left: 10px;
+		opacity: 0;
+	}
+
+	.icon-left {
+		position: absolute;
+		bottom: 10px;
+		left: 10px;
+		fontSize: 16;
+		cursor: pointer;
+	}
+
+	.icon-right {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		fontSize: 15;
+		cursor: pointer;
+	}
+
+	.launch-button {
+		@include LaunchButton();
+	}
+}

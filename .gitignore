@@ -1,0 +1,6 @@
+node_modules
+.idea
+build
+app
+java.tar.gz
+.DS_Store
