@@ -112,19 +112,6 @@ class ChoseVersionsContainer extends Component {
                 
                 <div className="body">
                     <div ref="loading">
-                        {
-                            /*
-
-                             <div style={{
-                             margin: 'auto',
-                             marginTop: 100,
-                             width: 90,
-                             height: 112,
-                             background: "url('./assets/images/server.svg')"
-                             }}></div>
-
-                             */
-                        }
                         <LoadingIcon className="loading-icon-main" style={{marginTop:150}} />
                         <LoadingText ref="loadingText" text="Getting versions list" />
                     </div>

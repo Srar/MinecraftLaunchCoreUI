@@ -17,9 +17,9 @@ class SettingsContainer extends Component {
     hide(){
         $(this.refs.SettingsContainer).removeClass('settings-container-display');
         /* 等待动画结束 */
-        setTimeout(() => {
-
-        }, 400);
+        // setTimeout(() => {
+        //
+        // }, 400);
     }
 
     render() {

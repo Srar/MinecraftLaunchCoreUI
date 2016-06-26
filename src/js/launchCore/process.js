@@ -52,33 +52,36 @@ module.exports = {
                         fs.unlinkSync(`${gameVersionFolder}${version}/${version}.jar`);
                 }
 
-                var versions = null;
-                TaskEvent.emit('list');
-                files.getVersions(url.getVersionsForChinaUser()).then(list => {
-                    console.log(list);
-                    versions = files.formatVersions(list);
-                    if(versions[version] == undefined) return TaskEvent.emit('error', `Can't find [${version}] from mojang server.`);
+                co(function *() {
+                    try {
+                        TaskEvent.emit('list');
+                        var list = yield files.getVersions(url.getVersionsForChinaUser());
+                        console.log(list);
+                        const versions = files.formatVersions(list);
+                        if(versions[version] == undefined) return TaskEvent.emit('error', `Can't find [${version}] from mojang server.`);
 
-                    if(!fs.existsSync(`${gameVersionFolder}${version}`)){
-                        console.info(`create ${gameVersionFolder}${version} folder.`);
-                        io.syncCreateFolder(`${gameVersionFolder}${version}`);
+                        if(!fs.existsSync(`${gameVersionFolder}${version}`)){
+                            console.info(`create ${gameVersionFolder}${version} folder.`);
+                            io.syncCreateFolder(`${gameVersionFolder}${version}`);
+                        }
+
+                        console.info(`downloading minecraft [${version}] version json file.`)
+                        TaskEvent.emit('json');
+
+                        var versionContent = yield io.request(versions[version].json);
+                        yield io.asyncWriteFile(`${gameVersionFolder}${version}/${version}.json`, versionContent);
+                        const coreUrl = url.getClientUrlForChinaUser(version);
+                        const DownloadProcess = io.DownloadFileToDisk(`${gameVersionFolder}${version}/${version}.jar`, coreUrl, 10);
+                        DownloadProcess.on('process', process => TaskEvent.emit('process', process));
+                        DownloadProcess.on('done', () => {
+                            fs.writeFileSync(`${gameVersionFolder}/${version}/${version}.lock`, '', 'utf-8');
+                            TaskEvent.emit('done');
+                        });
+                        DownloadProcess.on('error', error => TaskEvent.emit('error', error));
+                    } catch (ex) {
+                        TaskEvent.emit('error', ex);
                     }
-
-                    console.info(`downloading minecraft [${version}] version json file.`)
-                    TaskEvent.emit('json');
-                    return io.request(versions[version].json);
-                }).then(VersionInfo => {
-                    return io.asyncWriteFile(`${gameVersionFolder}${version}/${version}.json`, VersionInfo);
-                }).then(() => {
-                    const core = url.getClientUrlForChinaUser(version);
-                    const DownloadProcess = io.DownloadFileToDisk(`${gameVersionFolder}${version}/${version}.jar`, core, 10);
-                    DownloadProcess.on('process', process => TaskEvent.emit('process', process));
-                    DownloadProcess.on('done', () => {
-                        fs.writeFileSync(`${gameVersionFolder}/${version}/${version}.lock`, '', 'utf-8');
-                        TaskEvent.emit('done');
-                    });
-                    DownloadProcess.on('error', error => TaskEvent.emit('error', error));
-                }).catch(err => TaskEvent.emit('error', err));
+                });
             }
         };
     },
