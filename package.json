@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "基于Electron开发的Minecraft启动器 目前仅支持OSXn",
   "main": "browser.js",
+  "scripts": {		
+     "start": "electron ./app/browser.js"		
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Srar/MinecraftLaunchCoreUI.git"
