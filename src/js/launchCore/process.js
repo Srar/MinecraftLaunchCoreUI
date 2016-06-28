@@ -6,12 +6,10 @@ const fs       = require('fs');
 const filePath = require('./filePath');
 const child_process = require('child_process');
 const co       = window.require('co');
-const unzip    = window.require('unzip');
-const uuid     = window.require('node-uuid');
+const admZip    = require('adm-zip');
+const uuid     = require('node-uuid');
 
 const EventEmitter = require('events').EventEmitter;
-
-const LockFilesDir = filePath.lockFolder;
 
 const gameRootFolder = filePath.gameRootFolder;
 const gameAssetsFolder = filePath.gameAssetsFolder;
@@ -197,15 +195,21 @@ module.exports = {
                             } else {
                                 console.info(`natives lib [${NativeFileName}] [${i + 1}/${natives.length}] download.`);
                                 yield io.DownloadFileToDiskPromise(FullPath, url.getLibrariesForChinaUser(NativeUrl), 5);
+                                yield io.wait(500);
                             }
 
+
                             try {
-                                fs.createReadStream(FullPath).pipe(unzip.Extract({ path: gameNativeFolder + version }));
+                                var zip = new admZip(FullPath);
+                                zip.extractAllTo(gameNativeFolder + version, true);
+
+                                //fs.createReadStream(FullPath).pipe(unzip.Extract({ path: gameNativeFolder + version }));
                                 TaskEvent.emit('natives_process', {
                                     count: i + 1,
                                     total: natives.length
                                 });
                             }catch (ex) {
+                                console.log(ex);
                                 throw `unzip native ${NativeFileName} error.`;
                             }
                         }
@@ -220,6 +224,22 @@ module.exports = {
             }
         };
     },
+
+    // LoadAssetsProcess(version) {
+    //     const TaskEvent = new EventEmitter();
+    //     return {
+    //         event: TaskEvent,
+    //         start: () => {
+    //             if(!fs.existsSync(`${gameVersionFolder}${version}/${version}.json`))
+    //                 return TaskEvent.emit('error', `can't find ${version} from ${gameVersionFolder}`);
+    //
+    //             if(!fs.existsSync(gameAssetsFolder)){
+    //                 console.info(`create ${gameAssetsFolder} folder.`);
+    //                 io.syncCreateFolder(gameAssetsFolder);
+    //             }
+    //         }
+    //     }
+    // },
 
     LaunchMinecraftProcess(version, _args){
         const TaskEvent = new EventEmitter();

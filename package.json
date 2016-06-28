@@ -1,31 +1,18 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "MinecraftLaunchCoreUI",
+  "version": "0.0.1",
+  "description": "基于Electron开发的Minecraft启动器 目前仅支持OSXn",
   "main": "browser.js",
-  "scripts": {
-    "start": "electron ./app/browser.js"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron/electron-quick-start.git"
+    "url": "git+https://github.com/Srar/MinecraftLaunchCoreUI.git"
   },
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/electron/electron-quick-start/issues"
-  },
-  "homepage": "https://github.com/electron/electron-quick-start#readme",
+  "author": "Srar",
   "devDependencies": {
     "electron-prebuilt": "^1.0.1"
   },
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.9.1",
@@ -48,8 +35,6 @@
     "node-uuid": "^1.4.7",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
-    "rmdir": "^1.2.0",
-    "unzip": "^0.1.11",
     "webpack": "^1.13.0"
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 const fs      = require('fs');
+const path    = require('path');
 const mkdirp  = require('mkdirp');
 const EventEmitter = require('events').EventEmitter;
 import fetch from 'node-fetch';
@@ -12,6 +13,26 @@ module.exports = {
                 err ? reject(err) : resolve();
             });
         });
+    },
+
+    rmrf(dirPath){
+        if(!fs.existsSync(dirPath)) return;
+        if(!fs.statSync(dirPath).isDirectory()) return;
+        var files = fs.readdirSync(dirPath);
+        files.forEach(file => {
+            var fullPath = path.join(dirPath, file);
+            if(!fs.existsSync(fullPath)) return;
+            if(fs.lstatSync(fullPath).isDirectory()) { // recurse
+                rmrf(fullPath);
+            } else {
+                try {
+                    fs.unlinkSync(fullPath);
+                } catch (error) {
+
+                }
+            }
+        });
+        fs.rmdirSync(dirPath);
     },
 
     syncCreateFolder(path) {
@@ -36,8 +57,8 @@ module.exports = {
 
     WriteBufferToFile(fileName, data) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(fileName, data , (err, data) => {
-                err ? reject(err) : resolve(data);
+            fs.writeFile(fileName, data , err => {
+                err ? reject(err) : resolve();
             });
         });
     },
@@ -47,6 +68,14 @@ module.exports = {
             fs.readFile(fileName, 'utf8', (err, data) => {
                 err ? reject(err) : resolve(data);
             });
+        });
+    },
+
+    wait(time){
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, time);
         });
     },
 

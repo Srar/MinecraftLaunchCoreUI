@@ -5,7 +5,6 @@ const fs = require('fs');
 const spawn = require('child_process').spawn;
 const constants = require('../constants');
 const tarGzip = require('node-targz');
-const rmdir = window.require('rmdir');
 const EventEmitter = require('events').EventEmitter;
 
 const JavaConfigPath   = constants.WORKSPACE + '/java.json';
@@ -19,7 +18,7 @@ module.exports = {
             var _170 = false;
             var _180 = false;
 
-            const JavaProcess = spawn('/usr/bin/java', ['-version']);
+            const JavaProcess = spawn('/usr/bin/java1', ['-version']);
             JavaProcess.stdout.on('data', (data) => {
                 if(data.indexOf('"1.8') != -1) _180 = true;
                 if(data.indexOf('"1.7') != -1) _170 = true;
@@ -67,10 +66,8 @@ module.exports = {
 
     RmrfDir(path){
         return new Promise((resolve, reject) => {
-            if(!fs.existsSync(path)) resolve();
-            rmdir(path, (err) => {
-                err ? reject(err) : resolve();
-            });
+            io.rmrf(path);
+            resolve();
         });
     },
 

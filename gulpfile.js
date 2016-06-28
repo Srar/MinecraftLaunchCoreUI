@@ -25,16 +25,10 @@ gulp.task('copy', function () {
     gulp.src(['./package.json']).pipe(gulp.dest('./app'));
 
     gulp.src(['./node_modules/request/**/*']).pipe(gulp.dest('./app/node_modules/request'));
-
-    gulp.src(['./node_modules/rmdir/**/*']).pipe(gulp.dest('./app/node_modules/rmdir'));
-
+    
     gulp.src(['./node_modules/core-util-is/**/*']).pipe(gulp.dest('./app/node_modules/core-util-is'));
 
     gulp.src(['./node_modules/co/**/*']).pipe(gulp.dest('./app/node_modules/co'));
-
-    gulp.src(['./node_modules/unzip/**/*']).pipe(gulp.dest('./app/node_modules/unzip'));
-
-    gulp.src(['./node_modules/node-uuid/**/*']).pipe(gulp.dest('./app/node_modules/node-uuid'));
 });
 
 gulp.task('webpack', function (callback) {
@@ -164,7 +158,7 @@ var buildPackage = function (platform, arch, callback) {
         dir: './app',
         out: './build',
         name: APP_NAME,
-        version: '0.37.8',
+        version: '1.2.5',
         platform: platform,
     }, function (err, appPath) {
         if (appPath) {
