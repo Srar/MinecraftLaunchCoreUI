@@ -2,7 +2,16 @@
 
 基于Electron开发的Minecraft启动器 目前仅支持OSX
 
-## How to build
+## 本启动器包含以下特性
+* 不支持自定义Minecraft版本
+* 不支持正版登录
+* 不支持自定义下载源
+* 不支持自定义Java路径
+* 不支持自定义JVM额外参数
+* 不支持启动器自动更新
+* 不支持 Forge & LiteLoader 下载安装
+
+## 如何构建
 
 ```bash
 # Clone this repository
