@@ -3,6 +3,8 @@
 基于Electron开发的Minecraft启动器 目前仅支持OSX
 
 ## 本启动器包含以下特性
+* 不支持 Windows
+* 不支持 Linux
 * 不支持自定义Minecraft版本
 * 不支持正版登录
 * 不支持自定义下载源
