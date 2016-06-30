@@ -1,6 +1,6 @@
 # MinecraftLaunchCoreUI
 
-基于Electron开发的Minecraft启动器 目前仅支持OSX
+基于Electron开发的Minecraft启动器 目前仅支持OSX 目前主要功能已完成
 
 ## 本启动器包含以下特性
 * 优秀的用户体验

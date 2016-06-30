@@ -18,7 +18,7 @@ module.exports = {
             var _170 = false;
             var _180 = false;
 
-            const JavaProcess = spawn('/usr/bin/java1', ['-version']);
+            const JavaProcess = spawn('/usr/bin/java', ['-version']);
             JavaProcess.stdout.on('data', (data) => {
                 if(data.indexOf('"1.8') != -1) _180 = true;
                 if(data.indexOf('"1.7') != -1) _170 = true;
