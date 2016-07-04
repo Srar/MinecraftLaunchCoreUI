@@ -4,7 +4,7 @@
 
 ## 本启动器包含以下特性
 * 优秀的用户体验
-* 优秀的Minecraft资源下载速度
+* 针对中国大陆用户提供优化的Minecraft资源下载速度
 * 不支持 Windows
 * 不支持 Linux
 * 不支持自定义Minecraft版本

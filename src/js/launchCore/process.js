@@ -225,21 +225,103 @@ module.exports = {
         };
     },
 
-    // LoadAssetsProcess(version) {
-    //     const TaskEvent = new EventEmitter();
-    //     return {
-    //         event: TaskEvent,
-    //         start: () => {
-    //             if(!fs.existsSync(`${gameVersionFolder}${version}/${version}.json`))
-    //                 return TaskEvent.emit('error', `can't find ${version} from ${gameVersionFolder}`);
-    //
-    //             if(!fs.existsSync(gameAssetsFolder)){
-    //                 console.info(`create ${gameAssetsFolder} folder.`);
-    //                 io.syncCreateFolder(gameAssetsFolder);
-    //             }
-    //         }
-    //     }
-    // },
+    LoadAssetsProcess(version) {
+        const TaskEvent = new EventEmitter();
+        return {
+            event: TaskEvent,
+            start: () => {
+                if(!fs.existsSync(`${gameVersionFolder}${version}/${version}.json`))
+                    return TaskEvent.emit('error', `can't find ${version} from ${gameVersionFolder}`);
+
+                if(!fs.existsSync(gameAssetsFolder)){
+                    console.info(`create ${gameAssetsFolder} folder.`);
+                    io.syncCreateFolder(gameAssetsFolder);
+                }
+
+                co(function *() {
+                    var versionJsonFile = yield io.asyncReadFile(`${gameVersionFolder}/${version}/${version}.json`);
+                    var versionJson     = JSON.parse(versionJsonFile);
+
+                    const assetsIndex     = `${gameAssetsFolder}${versionJson.assets}/indexes/${versionJson.assets}.json`;
+                    const assetsIndexDir  = `${gameAssetsFolder}${versionJson.assets}/indexes/`;
+                    const assetsObjectDir = `${gameAssetsFolder}${versionJson.assets}/objects/`;
+
+                    if(!fs.existsSync(gameAssetsFolder + versionJson.assets)){
+                        console.info(`create ${gameAssetsFolder + versionJson.assets} folder.`);
+                        io.syncCreateFolder(gameAssetsFolder + versionJson.assets);
+                    }
+
+                    if(!fs.existsSync(assetsIndexDir)){
+                        console.info(`create ${assetsIndexDir} folder.`);
+                        io.syncCreateFolder(assetsIndexDir);
+                    }
+
+                    if(!fs.existsSync(assetsObjectDir)){
+                        console.info(`create ${assetsObjectDir} folder.`);
+                        io.syncCreateFolder(assetsObjectDir);
+                    }
+
+                    const lookFile = gameAssetsFolder + versionJson.assets + '.lock';
+
+                    if(fs.existsSync(lookFile)){
+                        console.log(`Assets ${versionJson.assets} lock file exists.`);
+                        TaskEvent.emit('done');
+                        return;
+                    }
+
+                    var assetsList  = yield io.request(`https://authentication.x-speed.cc/minecraft/assets/${versionJson.assets}.json`);
+                    fs.writeFileSync(assetsIndex, assetsList, 'utf-8');
+                    assetsList      = JSON.parse(assetsList);
+
+                    var taskCount = Object.keys(assetsList.objects).length;
+                    var taskDone  = 0;
+                    var taskError = 0;
+
+                    console.log(taskCount);
+                    for (var obj in assetsList.objects) {
+                        obj = assetsList.objects[obj];
+                        var hash = obj.hash;
+                        var index = hash.substring(0, 2);
+
+                        var folder = assetsObjectDir + index;
+                        var fullPath = assetsObjectDir + index + '/' + hash;
+
+                        /* 通知Assets下载进度方法 */
+                        function updateAssetsProcess(){
+                            TaskEvent.emit('process', {
+                                count: ++taskDone,
+                                total: taskCount
+                            });
+
+                            if(taskDone == taskCount){
+                                if(taskError == 0) fs.writeFileSync(lookFile, '', 'utf-8');
+                                TaskEvent.emit('done');
+                            }
+                        }
+
+                        yield io.asyncCreateFolder(folder);
+
+                        /* 判断是否已经下载过 */
+                        if(fs.existsSync(fullPath)) {
+                            updateAssetsProcess();
+                            continue;
+                        }
+
+                        try {
+                            yield io.DownloadFileToDiskPromise(fullPath, `https://authentication.x-speed.cc/minecraft/assets/${index}/${hash}`, 5);
+                        } catch (ex) {
+                            console.log(ex);
+                            taskError++;
+                        }
+                        updateAssetsProcess();
+                    }
+
+                });
+
+
+            }
+        }
+    },
 
     LaunchMinecraftProcess(version, _args){
         const TaskEvent = new EventEmitter();
@@ -328,7 +410,7 @@ module.exports = {
                             case '${auth_player_name}': item = args.player; break;
                             case '${version_name}': item = '"+1s"'; break;
                             case '${game_directory}': item = gameRootFolder ; break;
-                            case '${assets_root}': item = gameAssetsFolder; break;
+                            case '${assets_root}': item = `${gameAssetsFolder}/${VersionJSONContent.assets}` ; break;
                             case '${assets_index_name}': item = VersionJSONContent.assets; break;
                             case '${auth_uuid}':
                             case '${auth_access_token}':
@@ -337,7 +419,7 @@ module.exports = {
                             case '${user_properties}': item = '{}'; break;
                             case '${user_type}': item = 'Legacy'; break;
                             //1.5.2
-                            case  '${game_assets}': item = gameAssetsFolder; break;
+                            case  '${game_assets}': item = `${gameAssetsFolder}/${VersionJSONContent.assets}` ; break;
                         }
                         JVMArgs.push(item);
                     });

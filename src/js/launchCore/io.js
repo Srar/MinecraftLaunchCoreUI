@@ -7,6 +7,19 @@ const EventEmitter = require('events').EventEmitter;
 import fetch from 'node-fetch';
 
 module.exports = {
+
+    asyncCreateFolder(path){
+        return new Promise((resolve, reject) => {
+            fs.exists(path, (exists) => {
+                if(exists) resolve();
+                fs.mkdir(path, '0755', (err) =>  {
+                    if (err) return reject(err);
+                    resolve();
+                });
+            });
+        });
+    },
+
     asyncCreateFolderParent(path) {
         return new Promise((resolve, reject) => {
             mkdirp(path, (err) => {

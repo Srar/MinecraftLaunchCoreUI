@@ -55,19 +55,22 @@ class App extends Component {
         const InstallJavaProcess = Core.process.InstallJavaProcess();
         const DownloadMinecraftProcess = Core.process.DownloadMinecraftProcess(MinecraftVersion);
         const LoadLibsProcess = Core.process.LoadLibrariesProcess(MinecraftVersion);
+        const LoadAssetsProcess = Core.process.LoadAssetsProcess(MinecraftVersion);
         const LaunchMinecraftProcess = Core.process.LaunchMinecraftProcess(MinecraftVersion, args);
 
         const InstallJavaProcessEvent = InstallJavaProcess.event;
         const DownloadMinecraftProcessEvent = DownloadMinecraftProcess.event;
         const DownloadMinecraftLibsEvent = LoadLibsProcess.event;
+        const DownloadMinecrafrAssetsEvent = LoadAssetsProcess.event;
         const LaunchMinecraftEvent = LaunchMinecraftProcess.event;
 
-        if(`version-${MinecraftVersion}` == true){
-            LaunchMinecraftProcess.start();
-            this.refs.LoadingText.updateText('Launching Minecraft.');
-            this.DisplayLoadingProcess(false);
-            return;
-        }
+        //
+        // if(`version-${MinecraftVersion}` == true){
+        //     LaunchMinecraftProcess.start();
+        //     this.refs.LoadingText.updateText('Launching Minecraft.');
+        //     this.DisplayLoadingProcess(false);
+        //     return;
+        // }
 
         InstallJavaProcess.start();
         InstallJavaProcessEvent.on('done', () => {
@@ -107,14 +110,24 @@ class App extends Component {
         DownloadMinecraftLibsEvent
             .on('natives_process', (process) => this.UpdateLoadingProcess(`${process.count}/${process.total}`));
         DownloadMinecraftLibsEvent.on('done', () => {
-            LaunchMinecraftProcess.start();
-            this.refs.LoadingText.updateText('Launching Minecraft.');
-            this.DisplayLoadingProcess(false);
+            this.refs.LoadingText.updateText('Downloading assets')
+            this.UpdateLoadingProcess('...');
+            LoadAssetsProcess.start()
         });
         DownloadMinecraftLibsEvent.on('error', (error) => {
             global.config.set(`version-${MinecraftVersion}`, false);
             this.LaunchMinecraftError('下载依赖失败:' + error);
-        })
+        });
+
+        DownloadMinecrafrAssetsEvent.on('process', process => {
+            this.UpdateLoadingProcess(`${process.count}/${process.total}`);
+        });
+        
+        DownloadMinecrafrAssetsEvent.on('done', () => {
+            LaunchMinecraftProcess.start();
+            this.refs.LoadingText.updateText('Launching Minecraft.');
+            this.DisplayLoadingProcess(false);
+        });
 
         /* 启动Minecraft事件 */
         LaunchMinecraftEvent.on('error', (error) => this.LaunchMinecraftError('启动Minecraft失败:' + error));
