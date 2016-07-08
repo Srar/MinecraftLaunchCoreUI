@@ -5,6 +5,8 @@
 ## 本启动器包含以下特性
 * 优秀的用户体验
 * 针对中国大陆用户提供优化的Minecraft资源下载速度
+* 如系统未安装Java或者系统版本过低 会自动下载Java
+* 
 * 不支持 Windows
 * 不支持 Linux
 * 不支持自定义Minecraft版本
@@ -18,12 +20,11 @@
 ## 如何构建
 
 ```bash
-# Clone this repository
+# Clone至本地
 git clone https://github.com/Srar/MinecraftLaunchCoreUI.git
-# Go into the repository
 cd MinecraftLaunchCoreUI
-# Install dependencies
+# 安装依赖包
 sudo npm install
-# build project
+# 构建启动器
 gulp package
 ```
